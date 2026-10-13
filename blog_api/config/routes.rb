@@ -14,9 +14,7 @@ Rails.application.routes.draw do
 
   get "/me", to: "users#me"
 
-  resources :posts
-
   resources :posts do
-    resources :comments
+    resources :comments, only: [:index, :create, :update, :destroy]
   end
 end

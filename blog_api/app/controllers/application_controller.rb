@@ -1,7 +1,12 @@
 class ApplicationController < ActionController::API
   before_action :authenticate_user!
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   private
+
+  def not_found(exception)
+    render json: { error: "#{exception.model} not found" }, status: :not_found
+  end
 
   def authenticate_user!
     token = request.headers["Authorization"]&.split(" ")&.last
