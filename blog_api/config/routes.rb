@@ -9,6 +9,14 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   post "/login", to: "sessions#create"
+
   post "/signup", to: "users#create"
+
   get "/me", to: "users#me"
+
+  resources :posts
+
+  resources :posts do
+    resources :comments
+  end
 end
