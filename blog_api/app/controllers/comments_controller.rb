@@ -4,13 +4,13 @@ class CommentsController < ApplicationController
 
   def index
     comments = @post.comments.order(created_at: :desc)
-    render json: comments, status: :ok
+    render json: CommentSerializer.new(comments).serialize, status: :ok
   end
 
   def create
     comment = @post.comments.build(comment_params.merge(user: current_user))
     if comment.save
-      render json: comment, status: :created
+      render json: CommentSerializer.new(comment).serialize, status: :created
     else
       render json: { errors: comment.errors.full_messages }, status: :unprocessable_content
     end
@@ -18,7 +18,7 @@ class CommentsController < ApplicationController
 
   def update
     if @comment.update(comment_params)
-      render json: @comment, status: :ok
+      render json: CommentSerializer.new(@comment).serialize, status: :ok
     else
       render json: { errors: @comment.errors.full_messages }, status: :unprocessable_content
     end

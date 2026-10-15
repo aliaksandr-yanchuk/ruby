@@ -3,17 +3,17 @@ class PostsController < ApplicationController
 
   def index
     posts = Post.all.order(created_at: :desc)
-    render json: posts, status: :ok
+    render json: PostSerializer.new(posts).serialize, status: :ok
   end
 
   def show
-    render json: Post.find(params[:id])
+    render json: PostSerializer.new(Post.find(params[:id])).serialize
   end
 
   def create
     post = current_user.posts.build(post_params)
     if post.save
-      render json: post, status: :created
+      render json: PostSerializer.new(post).serialize, status: :created
     else
       render json: { errors: post.errors.full_messages }, status: :unprocessable_content
     end
@@ -21,7 +21,7 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
-      render json: @post, status: :ok
+      render json: PostSerializer.new(@post).serialize, status: :ok
     else
       render json: { errors: @post.errors.full_messages }, status: :unprocessable_content
     end

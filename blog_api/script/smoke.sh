@@ -79,7 +79,7 @@ check "list posts without token" 401
 req POST /posts "$BOB" "{\"post\":{\"title\":\"Hello\",\"body\":\"First post\",\"user_id\":$ALICE_ID}}"
 check "Bob creates a post" 201
 POST_ID=$(json .id)
-check_eq "post author is Bob even though user_id=Alice was sent" "$BOB_ID" "$(json .user_id)"
+check_eq "post author is Bob even though user_id=Alice was sent" "$BOB_ID" "$(json .author.id)"
 check_eq "post is unpublished by default" "false" "$(json .published)"
 
 req POST /posts "$BOB" '{"post":{"body":"no title"}}'
@@ -120,7 +120,7 @@ check "list comments" 200
 req POST "/posts/$POST_ID/comments" "$ALICE" '{"comment":{"body":"Nice post!"}}'
 check "Alice comments on Bob's post" 201
 COMMENT_ID=$(json .id)
-check_eq "comment author is Alice" "$ALICE_ID" "$(json .user_id)"
+check_eq "comment author is Alice" "$ALICE_ID" "$(json .author.id)"
 
 req POST "/posts/$POST_ID/comments" "$ALICE" '{"comment":{"body":""}}'
 check "comment with blank body" 422
